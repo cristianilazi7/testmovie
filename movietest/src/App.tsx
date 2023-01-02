@@ -29,11 +29,19 @@ function App() {
   };
 
   const getMovieRapi = async ()=> {
-    const response =  await axios(config)
+                  await axios(config)
                     .then(response => {
-                        console.log(response.data.data.results);
-                        setMovies(response.data.data.results);
-                        return response;
+                       // console.log(response.data.data.results);
+                        let cleanmovies: any[] = [];
+                        response.data.data.results.map((movie: any) => {
+                            if (movie.poster_path) {
+                              cleanmovies.push(movie);
+                            }
+                          });
+                        
+                        //console.log('movies:',cleanmovies);
+                        setMovies(cleanmovies);
+                        //return response;
                     })
                     .catch(error => {
                         console.log(error)

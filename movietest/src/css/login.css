@@ -15,3 +15,7 @@
   .submitbtn {
     margin-top: 10%;
   }
+
+  .containerSecundary .row>* {
+    width: 100%;
+}
