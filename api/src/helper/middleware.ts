@@ -3,6 +3,7 @@ import {environment} from '../../environments/environment'
 import { Request, Response, NextFunction } from "express";
 const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
     // Gather the jwt access token from the request header
+   // console.log(req)
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if (token == null) return res.sendStatus(401) // if there isn't any token

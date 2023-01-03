@@ -7,3 +7,5 @@ const MovieListHeading = (props: any) => {
         </div>
     );
 };
+
+export default MovieListHeading;

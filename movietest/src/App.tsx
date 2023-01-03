@@ -3,24 +3,37 @@ import axios from 'axios';
 import './App.css';
 import Movielist from './components/Movieslist';
 import { useCookies } from 'react-cookie';
+import Movielistheading from './components/Movielistheading';
+import SearchBox from './components/SearchBox';
 
 function App() {
   
   const [movies, setMovies] = useState<any>([]);
-  const [cookies, setCookie] = useCookies(['token']);
+  const [cookies] = useCookies(['token']);
+  const [searchValue, setSearchValue] = useState('');
 
-  const getMovieRequest = async () => {
-		const url = `http://www.omdbapi.com/?s=star wars&apikey=263d22d8`;
-
-		const response = await fetch(url);
-		const responseJson = await response.json();
-
-		if (responseJson.Search) {
-			setMovies(responseJson.Search);
-		}
+  const getMovieRequest = async (searchValue: string) => {
+    config.url = `http://localhost:3200/movies/search/${searchValue}`;
+		await axios(config)
+                    .then(response => {
+                       // console.log(response.data.data.results);
+                        let cleanmovies: any[] = [];
+                        response.data.data.results.map((movie: any) => {
+                            if (movie.poster_path) {
+                              cleanmovies.push(movie);
+                            }
+                          });
+                        
+                        console.log('movies:',cleanmovies);
+                        setMovies(cleanmovies);
+                        //return response;
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    });
 	};
 
-  const config = {
+  let config = {
     method: 'get',
     url: 'http://localhost:3200/movies',
     headers: { 
@@ -28,7 +41,10 @@ function App() {
     }
   };
 
+
+
   const getMovieRapi = async ()=> {
+    config.url = 'http://localhost:3200/movies';
                   await axios(config)
                     .then(response => {
                        // console.log(response.data.data.results);
@@ -48,16 +64,18 @@ function App() {
                     });
     }
 
-
   useEffect(() => {
-		getMovieRequest();
     getMovieRapi();
-	}, []);
+		getMovieRequest(searchValue);
+	}, [searchValue]);
 
 
   return (
     <div className='container-fluid movie-app'>
-      <h1>Movies:</h1>
+      <div className='row d-flex align-items-center mt-4 mb-4'>
+				<Movielistheading heading='Movies' ></Movielistheading>
+				<SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
+			</div>
 			<div className='row'>
         
         <Movielist movies={movies} />

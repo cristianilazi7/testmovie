@@ -10,7 +10,7 @@ const MovieSearchRoutes = express.Router();
     console.log('Entro a buscar: ', req.params); 
 
   const moviename = req.params.moviename;
-  const url = `${environment.urlMoviedb}/search/movie?query=${moviename}&sort_by=popularity.desc&api_key=${environment.apikey}&language=es`;
+  const url = `${environment.urlMoviedb}/search/movie?query=${moviename}&sort_by=popularity.desc&api_key=${environment.apikey}&${environment.language}`;
   
   let promise = new Promise(async function(resolve, reject) {
     await axios.get(url)
@@ -21,15 +21,17 @@ const MovieSearchRoutes = express.Router();
     })
     .catch(function (error) {
         // handle error
-        console.log(error);
+        //console.log(error);
         reject(new Error(JSON.stringify({msg: error})));
     })
     .finally(function () {
         // always executed
     });
+
+    resolve(true);
   });
   promise.then((result) => {
-      console.log("Success", result);
+      //console.log("Success", result);
       res.status(200).json({'data':result, 'result': 'successfully','status':200});
   }).catch((error) => {
       console.log("Error search", error);
