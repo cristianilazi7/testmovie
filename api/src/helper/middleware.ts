@@ -14,6 +14,6 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
       if (err) return res.status(403).json({'token:': err.message });
       req.body = user
       next() // pass the execution off to whatever request the client intended
-    })
+    });
 };
 export default authenticateToken;
